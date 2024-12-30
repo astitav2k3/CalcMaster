@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CalcMaster</title>
+    <style>
+        /* Basic styling for the calculator */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 5px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .calculator {
+            display: none;
+            text-align: center;
+        }
+
+        .calculator.active {
+            display: grid;
+            grid-template-areas:
+                "screen"
+                "numbers";
+            grid-gap: 10px;
+        }
+
+        .calculator input {
+            grid-area: screen;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 18px;
+            text-align: right;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+
+        .calculator .number-pad {
+            grid-area: numbers;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+        }
+
+        .calculator button {
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .calculator button:hover {
+            background-color: #ccc;
+        }
+
+        /* Styling for Binary Conversion Calculator */
+        .binary-calculator {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        .binary-calculator h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .binary-calculator input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+
+        .binary-calculator button {
+            cursor: pointer;
+            background-color: #5cb85c;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .binary-calculator button:hover {
+            background-color: #449d44;
+        }
+
+        .binary-calculator p {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Styling for Decimal to Binary Converter */
+        .decimal-calculator {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        .decimal-calculator h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .decimal-calculator input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+
+        .decimal-calculator button {
+            cursor: pointer;
+            background-color: #f0ad4e;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .decimal-calculator button:hover {
+            background-color: #ec971f;
+        }
+
+        .decimal-calculator p {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Calculator</h1>
+		<h3>Normal,  Binary-Decimal,  Decimal-Binary</h3>
+    </header>
+
+    <div class="container">
+        <label for="calculatorType">Select Calculator Type:</label>
+        <select id="calculatorType">
+            <option value="normal">Normal Calculator</option>
+            <option value="binary">Binary Conversion Calculator</option>
+            <option value="decimal">Decimal to Binary Converter</option>
+        </select>
+
+        <div class="calculator active" id="normalCalculator">
+            <input type="text" id="result" disabled >
+            <div class="number-pad">
+                <button onclick="appendToResult('9')">9</button>
+				<button onclick="appendToResult('8')">8</button>
+				<button onclick="appendToResult('7')">7</button>
+                <button onclick="appendToResult('6')">6</button>
+				<button onclick="appendToResult('5')">5</button>
+				<button onclick="appendToResult('4')">4</button>
+				<button onclick="appendToResult('3')">3</button>
+                <button onclick="appendToResult('2')">2</button>
+                <button onclick="appendToResult('1')">1</button>
+				<button onclick="appendToResult('0')">0</button>
+				<button onclick="appendToResult('+')">+</button>
+                <button onclick="appendToResult('-')">-</button>
+                <button onclick="appendToResult('*')">*</button>
+                <button onclick="appendToResult('.')">.</button>
+				<button class="equal-btn" onclick="calculateResult()">=</button>
+                <button onclick="clearResult()">C</button>
+                <button onclick="appendToResult('/')">/</button>
+            </div>
+        </div>
+
+        <div class="calculator" id="binaryCalculator">
+            <div class="binary-calculator">
+                <h2>Binary Conversion Calculator</h2>
+                <input type="text" id="binaryInput" placeholder="Enter binary number">
+                <button onclick="binaryToDecimal()">Convert to Decimal</button>
+                <p id="decimalResult"></p>
+            </div>
+        </div>
+
+        <div class="calculator" id="decimalCalculator">
+            <div class="decimal-calculator">
+                <h2>Decimal to Binary Converter</h2>
+                <input type="text" id="decimalInput" placeholder="Enter decimal number">
+                <button onclick="decimalToBinary()">Convert to Binary</button>
+                <p id="binaryResult"></p>
+            </div>
+        </div>
+    </div>
+	<br>
+	<br><br>
+	<br>
+   <footer class="footer">
+    <p>&copy; 2023 Calculator App. All rights reserved.</p>
+    <p>For queries, mail us at <a href="mailto:amstudio0007@gmail.com">✉️</a></p>
+</footer>
+
+
+    <script>
+        // Calculator functions
+        function appendToResult(value) {
+            document.getElementById('result').value += value;
+        }
+
+        function clearResult() {
+            document.getElementById('result').value = '';
+        }
+
+        function calculateResult() {
+            try {
+                document.getElementById('result').value = eval(document.getElementById('result').value);
+            } catch (error) {
+                document.getElementById('result').value = 'Error';
+            }
+        }
+
+        // Binary conversion calculator function
+        function binaryToDecimal() {
+            const binaryInput = document.getElementById('binaryInput').value;
+            const decimalResult = document.getElementById('decimalResult');
+            const decimalValue = parseInt(binaryInput, 2);
+            decimalResult.textContent = isNaN(decimalValue) ? 'Invalid binary number' : `Decimal: ${decimalValue}`;
+        }
+
+        // Decimal to binary conversion calculator function
+        function decimalToBinary() {
+            const decimalInput = document.getElementById('decimalInput').value;
+            const binaryResult = document.getElementById('binaryResult');
+            const decimalValue = parseInt(decimalInput);
+            if (isNaN(decimalValue)) {
+                binaryResult.textContent = 'Invalid decimal number';
+            } else {
+                binaryResult.textContent = `Binary: ${decimalValue.toString(2)}`;
+            }
+        }
+
+        // Show/hide calculators based on the selection
+        document.getElementById('calculatorType').addEventListener('change', function () {
+            const selectedCalculator = this.value;
+            const calculators = document.querySelectorAll('.calculator');
+
+            calculators.forEach(calculator => {
+                if (calculator.id === selectedCalculator + 'Calculator') {
+                    calculator.classList.add('active');
+                } else {
+                    calculator.classList.remove('active');
+                }
+            });
+        });
+
+        // Handle keyboard input for normal calculator
+        document.addEventListener('keydown', function (event) {
+            const key = event.key;
+            const normalCalculator = document.getElementById('normalCalculator');
+            if (normalCalculator.classList.contains('active')) {
+                if (key === 'Enter') {
+                    calculateResult();
+                } else if (key === 'Escape') {
+                    clearResult();
+                } else if (!isNaN(key) || key === '.' || ['+', '-', '*', '/'].includes(key)) {
+                    appendToResult(key);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
